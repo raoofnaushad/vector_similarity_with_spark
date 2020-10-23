@@ -87,7 +87,7 @@ get_schema = StructType(
 feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim(x[4]), x[3])).toDF(get_schema) #cos_sim_udf
 top_match = feature_df_rdd_new.rdd.max(key=lambda x: x["cosine_distance"])
 print(top_match)
-top_match.saveAsTextFile(config.FILEPATH)
+top_match.coalesce(1).write.option("header", "true").csv("out.csv")
 print(list(top_match.asDict()))
 print(type(top_match))
 end = time.time()
