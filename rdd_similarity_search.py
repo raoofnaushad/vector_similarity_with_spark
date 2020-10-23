@@ -85,14 +85,8 @@ get_schema = StructType(
 )
 
 feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim(x[4]), x[3])).toDF(get_schema) #cos_sim_udf
-# feature_df_rdd_new_sorted = feature_df_rdd_new.sortBy(lambda x: x[1])
-# print(feature_df_rdd_new.take(10))
-# feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
-feature_df_rdd_new.show()
-# print(feature_df_rdd_new.collect())
-# print(feature_df_rdd_new.take(100))
-
-
+top_match = feature_df_rdd_new.rdd.max(key=lambda x: x["cosine_distance"])
+print(top_match.collect())
 end = time.time()
 
 # print("Top matches are {}".format(top_matches))
