@@ -83,7 +83,7 @@ get_schema = StructType(
  StructField('col3', StringType(), True)]
 )
 
-feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim_udf(x[2]), x[3])).toDF()
+feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim_udf(x[2]), x[3])).toDF(get_schema)
 # feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
 feature_df_rdd_new.show()
 
