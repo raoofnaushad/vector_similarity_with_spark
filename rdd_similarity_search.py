@@ -70,8 +70,9 @@ def cos_sim(vec):
         dot_value = np.dot(value, vec) / (np.linalg.norm(value)*np.linalg.norm(vec))
         return dot_value.tolist()
 
-cos_sim_udf = F.udf(cos_sim, T.FloatType())
-
+# cos_sim_udf = F.udf(cos_sim, T.FloatType())
+spark.udf.register("cos_sim", cos_sim, FloatType())
+                   
 start = time.time()
 feature_df_rdd = feature_df.rdd
 
@@ -83,7 +84,7 @@ get_schema = StructType(
  StructField('col3', StringType(), True)]
 )
 
-feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], (x[2]), x[3])) #cos_sim_udf
+feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim(x[2]), x[3])) #cos_sim_udf
 # feature_df_rdd_new_sorted = feature_df_rdd_new.sortBy(lambda x: x[1])
 print(feature_df_rdd_new.take(10))
 # feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
