@@ -88,8 +88,8 @@ feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim(x[4]), x[3])).
 top_match = feature_df_rdd_new.rdd.max(key=lambda x: x["cosine_distance"])
 print(top_match)
 
-max_values = top_match.select('label','cosine_distance', 'image_path').collect()
-print(max_values)
+print(top_match.__getattr__("image_path"))
+# print(max_values)
 
 # print(list(top_match.asDict()))
 # print(type(top_match))
