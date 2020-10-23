@@ -75,9 +75,9 @@ feature_df_rdd = feature_df.rdd
 
 # feature_df_rdd_new = feature_df_rdd.map(lambda x: x + cos_sim_udf(x[2]))
 
-feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x.label, cos_sim_udf(x.features), x.image_paths))
-feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
-feature_df_cos.show()
+feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x.label, cos_sim_udf(x.features), x.image_paths)).toDF()
+# feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
+feature_df_rdd_new.show()
 
 
 end = time.time()
