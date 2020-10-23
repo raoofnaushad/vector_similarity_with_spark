@@ -79,7 +79,7 @@ feature_df_rdd = feature_df.rdd
 # feature_df_rdd_new = feature_df_rdd.map(lambda x: x + cos_sim_udf(x[2]))
 
 get_schema = StructType(
-[StructField('label', IntegerType(), True),
+[StructField('label', StringType(), True),
  StructField('cosine_distance', FloatType(), True),
  StructField('image_path', StringType(), True)]
 )
