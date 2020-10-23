@@ -4,6 +4,8 @@ import pyspark.sql.types as T
 import pyspark.sql.functions as F
 from pyspark.context import SparkContext
 from pyspark.sql import SQLContext
+from pyspark.sql.types import StringType, FloatType, StructField, StructType, IntegerType
+
 
 
 import time
@@ -74,6 +76,12 @@ start = time.time()
 feature_df_rdd = feature_df.rdd
 
 # feature_df_rdd_new = feature_df_rdd.map(lambda x: x + cos_sim_udf(x[2]))
+
+get_schema = StructType(
+[StructField('col1', IntegerType(), True),
+ StructField('col2', FloatType(), True),
+ StructField('col3', StringType(), True)]
+)
 
 feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim_udf(x[2]), x[3])).toDF()
 # feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
