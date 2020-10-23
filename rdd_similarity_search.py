@@ -68,25 +68,33 @@ def cos_sim(vec):
         dot_value = np.dot(value, vec) / (np.linalg.norm(value)*np.linalg.norm(vec))
         return dot_value.tolist()
 
-
-start = time.time()
-
-feature_df_rdd = feature_df.rdd
-
 cos_sim_udf = F.udf(cos_sim, T.FloatType())
 
-feature_df_cos_rdd = feature_df_rdd.withColumn('cos_dis', cos_sim_udf('features_new')).dropna(subset='cos_dis')
-feature_df_cos = sqlContext.createDataFrame(feature_df_cos_rdd)
+start = time.time()
+feature_df_rdd = feature_df.rdd
+
+feature_df_rdd.map(lambda x: x + cos_sim_udf(x[2]))
+feature_df_cos = sqlContext.createDataFrame(feature_df_rdd)
 feature_df_cos.show()
 
-max_values = feature_df_cos.select('image_paths','cos_dis').orderBy('cos_dis', ascending=False).limit(5).collect()
-top_matches = []
-for x in max_values:
-    top_matches.append(x[0])
 
 end = time.time()
 
-print("Top matches are {}".format(top_matches))
-print("Total time is {}".format(end-start))
-print("---------------------------------------------------------")
+# print("Top matches are {}".format(top_matches))
+# print("Total time is {}".format(end-start))
+# print("---------------------------------------------------------")
+
+
+
+
+# max_values = feature_df_cos.select('image_paths','cos_dis').orderBy('cos_dis', ascending=False).limit(5).collect()
+# top_matches = []
+# for x in max_values:
+#     top_matches.append(x[0])
+
+# end = time.time()
+
+# print("Top matches are {}".format(top_matches))
+# print("Total time is {}".format(end-start))
+# print("---------------------------------------------------------")
 
