@@ -87,6 +87,7 @@ feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim_udf(x[2]), x[3
 # feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
 # feature_df_rdd_new.show()
 # print(feature_df_rdd_new.collect())
+print(feature_df_rdd_new.take(100))
 
 
 end = time.time()
