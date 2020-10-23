@@ -73,7 +73,9 @@ cos_sim_udf = F.udf(cos_sim, T.FloatType())
 start = time.time()
 feature_df_rdd = feature_df.rdd
 
-feature_df_rdd_new = feature_df_rdd.map(lambda x: x + cos_sim_udf(x[3]))
+# feature_df_rdd_new = feature_df_rdd.map(lambda x: x + cos_sim_udf(x[2]))
+
+feature_df_rdd_new  = feature_df_rdd.rdd.map(lambda x: (x.label, cos_sim_udf(x.features), x.image_paths))
 feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
 feature_df_cos.show()
 
