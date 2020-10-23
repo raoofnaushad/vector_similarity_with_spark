@@ -73,7 +73,6 @@ def cos_sim(vec):
 # cos_sim_udf = F.udf(cos_sim, T.FloatType())
 spark.udf.register("cos_sim", cos_sim, FloatType())
                    
-start = time.time()
 feature_df_rdd = feature_df.rdd
 
 # feature_df_rdd_new = feature_df_rdd.map(lambda x: x + cos_sim_udf(x[2]))
@@ -84,32 +83,14 @@ get_schema = StructType(
  StructField('image_path', StringType(), True)]
 )
 
+start = time.time()
 feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], cos_sim(x[4]), x[3])).toDF(get_schema) #cos_sim_udf
 top_match = feature_df_rdd_new.rdd.max(key=lambda x: x["cosine_distance"])
 print(top_match)
 
 print(top_match.__getattr__("image_path"))
-# print(max_values)
 
-# print(list(top_match.asDict()))
-# print(type(top_match))
-# end = time.time()
+end = time.time()
 
-# print("Top matches are {}".format(top_matches))
-# print("Total time is {}".format(end-start))
-# print("---------------------------------------------------------")
-
-
-
-
-# max_values = feature_df_cos.select('image_paths','cos_dis').orderBy('cos_dis', ascending=False).limit(5).collect()
-# top_matches = []
-# for x in max_values:
-#     top_matches.append(x[0])
-
-# end = time.time()
-
-# print("Top matches are {}".format(top_matches))
-# print("Total time is {}".format(end-start))
-# print("---------------------------------------------------------")
-
+print("Total time is {}".format(end-start))
+print("---------------------------------------------------------")
