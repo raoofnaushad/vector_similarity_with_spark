@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession
 import pyspark.sql.types as T
 import pyspark.sql.functions as F
 
-import datetime
+import time
 import numpy as np
 import json
 
@@ -62,10 +62,9 @@ def cos_sim(vec):
         dot_value = np.dot(value, vec) / (np.linalg.norm(value)*np.linalg.norm(vec))
         return dot_value.tolist()
 
-
 cos_sim_udf = F.udf(cos_sim, T.FloatType())
 
-t1 = datetime.datetime.now()
+start = time.time()
 feature_df_cos = feature_df.withColumn('cos_dis', cos_sim_udf('features_new')).dropna(subset='cos_dis')
 # feature_df_cos.show()
 max_values = feature_df_cos.select('image_paths','cos_dis').orderBy('cos_dis', ascending=False).limit(5).collect()
@@ -74,9 +73,9 @@ top_matches = []
 for x in max_values:
     top_matches.append(x[0])
 
-t2 = datetime.datetime.now()
+end = time.time()
 
 print("Top matches are {}".format(top_matches))
-print("Total time is {}".format((t1 - t2)))
+print("Total time is {}".format(end-start))
 print("---------------------------------------------------------")
 
