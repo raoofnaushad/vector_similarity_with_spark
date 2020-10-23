@@ -61,7 +61,6 @@ query_df = query_df.withColumn("features_new", retrieve_embedding(F.col("feature
 query_df.printSchema()
 
 value = query_df.select('features_new').collect()[0][0]
-print("Query vector is {}".format(value))
 print("--------------------*****----------------------------------")
 
 def cos_sim(vec):

@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession
 import pyspark.sql.types as T
 import pyspark.sql.functions as F
 
-import time
+import datetime
 import numpy as np
 import json
 
@@ -55,7 +55,6 @@ query_df = query_df.withColumn("features_new", retrieve_embedding(F.col("feature
 query_df.printSchema()
 
 value = query_df.select('features_new').collect()[0][0]
-print("Query vector is {}".format(value))
 print("--------------------*****----------------------------------")
 
 def cos_sim(vec):
@@ -63,21 +62,21 @@ def cos_sim(vec):
         dot_value = np.dot(value, vec) / (np.linalg.norm(value)*np.linalg.norm(vec))
         return dot_value.tolist()
 
-start = time.time()
 
 cos_sim_udf = F.udf(cos_sim, T.FloatType())
 
+t1 = datetime.datetime.now()
 feature_df_cos = feature_df.withColumn('cos_dis', cos_sim_udf('features_new')).dropna(subset='cos_dis')
-
-feature_df_cos.show()
+# feature_df_cos.show()
 max_values = feature_df_cos.select('image_paths','cos_dis').orderBy('cos_dis', ascending=False).limit(5).collect()
+
 top_matches = []
 for x in max_values:
     top_matches.append(x[0])
 
-end = time.time()
+t2 = datetime.datetime.now()
 
 print("Top matches are {}".format(top_matches))
-print("Total time is {}".format(end-start))
+print("Total time is {}".format(print(t1 - t2)))
 print("---------------------------------------------------------")
 
