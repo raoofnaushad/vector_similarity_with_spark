@@ -64,6 +64,8 @@ print("--------------------*****----------------------------------")
 cos_sim_udf = F.udf(cos_sim, T.FloatType())
 
 feature_df_cos = feature_df.withColumn('cos_dis', cos_sim_udf('features_new')).dropna(subset='cos_dis')
+
+feature_df_cos.show()
 max_values = feature_df_cos.select('image_paths','cos_dis').orderBy('cos_dis', ascending=False).limit(5).collect()
 top_matches = []
 for x in max_values:
