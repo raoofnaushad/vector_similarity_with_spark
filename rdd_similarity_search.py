@@ -83,9 +83,9 @@ get_schema = StructType(
  StructField('col3', StringType(), True)]
 )
 
-feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1]))#, cos_sim_udf(x[2]), x[3]))
+feature_df_rdd_new  = feature_df_rdd.map(lambda x: (x[1], (x[2]), x[3])) #cos_sim_udf
 # feature_df_rdd_new_sorted = feature_df_rdd_new.sortBy(lambda x: x[1])
-print(feature_df_rdd_new.collect())
+print(feature_df_rdd_new.take(10))
 # feature_df_cos = sqlContext.createDataFrame(feature_df_rdd_new)
 # feature_df_rdd_new.show()
 # print(feature_df_rdd_new.collect())
