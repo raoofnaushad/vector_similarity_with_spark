@@ -77,6 +77,6 @@ for x in max_values:
 t2 = datetime.datetime.now()
 
 print("Top matches are {}".format(top_matches))
-print("Total time is {}".format(print(t1 - t2)))
+print("Total time is {}".format((t1 - t2)))
 print("---------------------------------------------------------")
 
